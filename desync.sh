@@ -23,7 +23,7 @@ keys_file_incorrect_mode () {
     exit 1
 }
 
-no_external_drives () {
+no_unmounted_partitions () {
     echo "No unmounted partitions found"
     exit 1
 }
@@ -65,7 +65,7 @@ partitions=$(lsblk --noheadings --raw -o NAME,MOUNTPOINT |         # grab all di
              sort                                                  # sort
 )
 
-[ -z "$partitions" ] && no_unmounted partitions  # Exit if $partitions is zero-length
+[ -z "$partitions" ] && no_unmounted_partitions  # Exit if $partitions is zero-length
 
 # Inform the user about discovered unmounted partitions
 echo "Found $(echo "$partitions" | wc -l) unmounted partitions:"
