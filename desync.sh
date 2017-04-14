@@ -26,16 +26,15 @@ function keys_file_incorrect_mode () {
 keys_file="/usr/local/etc/keys"
 [ -f "$keys_file" ] || keys_file_no_exist
 
-# Check keys file has correct mode
+# Check keys file has correct mode (not working yet)
 expected_mode="600"
 #(( $(stat -c %a "$keys_file" == "$expected_mode") )) || keys_file_incorrect_mode
-# Above not working yet...
 
 # Get list of drives that contain unmounted partitions
-drives=$(lsblk --noheadings --raw -o NAME,MOUNTPOINT |  # grab disks/parts
-         awk '$1~/sd.[[:digit:]]/ && $2 == ""' |        # get sd<number> with no mountpoint
-         tr -d '[:blank:]' |                            # remove blank characters
-         sed 's/.$//' |                                 # remove last character (sdb1 > sdb)
+drives=$(lsblk --noheadings --raw -o NAME,MOUNTPOINT |  # grab all disks/parts
+         awk '$1~/sd.[[:digit:]]/ && $2 == ""' |        # get any sd<number> with no mountpoint
+         tr -d '[:blank:]' |                            # remove any blank characters
+         sed 's/.$//' |                                 # remove the last character (e.g. sdb1 becomes sdb)
          sort |                                         # sort
          uniq                                           # remove duplicates
 )
