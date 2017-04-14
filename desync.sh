@@ -52,19 +52,21 @@ if [ "$actual_mode" != "$expected_mode" ]; then keys_file_incorrect_mode ; fi
 #########
 # Get list of drives that contain unmounted partitions
 drives=$(lsblk --noheadings --raw -o NAME,MOUNTPOINT |         # grab all disks/parts
+         #awk '$1~/sd.[[:digit:]]/ { print $1 }' |             # get any sd<number>
          awk '$1~/sd.[[:digit:]]/ && $2 == "" { print $1 }' |  # get any sd<number> with no mountpoint
          tr -d '[:blank:]' |                                   # remove any blank characters
-         sed 's/.$//' |                                        # remove the last character (e.g. sdb1 becomes sdb)
-         sort |                                                # sort
-         uniq                                                  # remove duplicates
+         sort                                                  # sort
 )
 
 [ -z "$drives" ] && no_external_drives  # Exit if $drives is zero-length
 
-echo "Found $(echo "$drives" | wc -l) drive(s) with unmounted partitions:"
+echo "Found $(echo "$drives" | wc -l) unmounted partitions:"
+for drive in $drives; do
+    echo "  /dev/$drive"
+done
 echo
 
-for drive in $drives; do
+for drive in $(echo "$drives" | sed 's/.$//' | sort | uniq); do
     echo "  Getting size of /dev/$drive..."
     echo "    $(lsblk --noheadings --raw -o NAME,SIZE /dev/"$drive" \
                  | head -n1 \
@@ -75,7 +77,7 @@ done
 while true; do
     read -r -p "Do you wish to continue (y/n)? " choice
     case $choice in
-        [Yy]|yes ) echo "Yes picked" ; decrypt_drives ; break ;;
+        [Yy]|yes ) echo "Yes picked" ; decrypt_drives ; break;;
         [Nn]|no ) echo "No picked" ; exit 1;;
         * ) echo "Please answer Y/y/yes or N/n/no.";;
     esac
