@@ -52,7 +52,7 @@ if [ "$actual_mode" != "$expected_mode" ]; then keys_file_incorrect_mode ; fi
 #########
 # Get list of unmounted partitions
 partitions=$(lsblk --noheadings --raw -o NAME,MOUNTPOINT |         # grab all disks/parts
-             #awk '$1~/sd.[[:digit:]]/ { print $1 }' |             # get any sd<number>
+             #awk '$1~/sd.[[:digit:]]/ { print $1 }' |              # get any sd<number> ... (testing)
              awk '$1~/sd.[[:digit:]]/ && $2 == "" { print $1 }' |  # get any sd<number> with no mountpoint
              tr -d '[:blank:]' |                                   # remove any blank characters
              sort                                                  # sort
