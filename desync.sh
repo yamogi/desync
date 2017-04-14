@@ -51,7 +51,7 @@ drives=$(lsblk --noheadings --raw -o NAME,MOUNTPOINT |         # grab all disks/
 echo "Found $(echo "$drives" | wc -l) drive(s):"
 echo
 
-for drive in $(echo "$drives" | paste -s -d ' ' -); do
+for drive in $drives; do
     echo "Getting size of /dev/$drive..."
     echo "    $(lsblk --noheadings --raw -o NAME,SIZE /dev/"$drive" \
                 | head -n1 \
