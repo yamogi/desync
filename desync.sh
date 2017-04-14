@@ -19,6 +19,11 @@ function keys_file_incorrect_mode () {
     exit 1
 }
 
+function no_external_drives () {
+    echo "I could not find any drives with unmounted partitions"
+    exit 1
+}
+
 # Check running as root
 (( $EUID == 0 )) || not_root
 
@@ -38,5 +43,7 @@ drives=$(lsblk --noheadings --raw -o NAME,MOUNTPOINT |  # grab all disks/parts
          sort |                                         # sort
          uniq                                           # remove duplicates
 )
+
+[ -z "$drives" ] && no_external_drives  # Exit if $drives is zero-length
 
 echo "Assuming $(wc -l <<< "$drives") drive(s), is this correct?"
