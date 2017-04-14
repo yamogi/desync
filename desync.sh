@@ -32,7 +32,7 @@ no_external_drives () {
 keys_file="/usr/local/etc/keys"
 [ -f "$keys_file" ] || keys_file_no_exist
 
-# Check keys file has correct mode (not working yet)
+# Check keys file has correct mode
 expected_mode="600"
 actual_mode=$(stat -c %a "$keys_file")
 if [ "$actual_mode" != "$expected_mode" ]; then keys_file_incorrect_mode ; fi
