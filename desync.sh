@@ -15,6 +15,7 @@
 #     $ cat /usr/local/etc/keys
 #     cat: /usr/local/etc/keys: Permission denied
 #
+#  0.5. Ensure script is being run as root (for reading keys file)
 #  1. Try and work out how many drives are connected (parse fdisk or lsblk?)
 #  2. Let user know how many external drives it thinks are attached and
 #     wait for confirmation
