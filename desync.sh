@@ -26,7 +26,7 @@ no_external_drives () {
 }
 
 # Check running as root
-(( $EUID == 0 )) || not_root
+[ $EUID = 0 ] || not_root
 
 # Check keys file exists
 keys_file="/usr/local/etc/keys"
