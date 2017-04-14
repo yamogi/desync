@@ -3,6 +3,9 @@
 # desync.sh - decrypt one or more external drives
 #             and sync files between them
 
+#############
+# FUNCTIONS #
+#############
 not_root () {
     echo "Not running as root, unable to continue"
     exit 1
@@ -29,6 +32,9 @@ decrypt_drives () {
     echo "Preparing to decrypt drives..."
 }
 
+##########
+# CHECKS #
+##########
 # Check running as root
 [ "$(id -u)" = 0 ] || not_root
 
@@ -41,6 +47,9 @@ expected_mode="600"
 actual_mode=$(stat -c %a "$keys_file")
 if [ "$actual_mode" != "$expected_mode" ]; then keys_file_incorrect_mode ; fi
 
+#########
+# START #
+#########
 # Get list of drives that contain unmounted partitions
 drives=$(lsblk --noheadings --raw -o NAME,MOUNTPOINT |         # grab all disks/parts
          awk '$1~/sd.[[:digit:]]/ && $2 == "" { print $1 }' |  # get any sd<number> with no mountpoint
