@@ -23,6 +23,10 @@ keys_file_incorrect_mode () {
     exit 1
 }
 
+get_length_of_keys_file () {
+    echo "  Keys file contains: $(wc -l < "$keys_file") line(s)"
+}
+
 no_unmounted_partitions () {
     echo "No unmounted partitions found"
     exit 1
@@ -60,7 +64,10 @@ expected_mode="600"
 actual_mode=$(stat -c %a "$keys_file")
 [ "$actual_mode" = "$expected_mode" ] || keys_file_incorrect_mode
 echo "  Test 2 passed: Keys file has correct permissions ($expected_mode)..."
-echo
+
+get_length_of_keys_file
+
+echo ; echo
 
 #########
 # START #
