@@ -38,14 +38,23 @@ actual_mode=$(stat -c %a "$keys_file")
 if [ "$actual_mode" != "$expected_mode" ]; then keys_file_incorrect_mode ; fi
 
 # Get list of drives that contain unmounted partitions
-drives=$(lsblk --noheadings --raw -o NAME,MOUNTPOINT |  # grab all disks/parts
-         awk '$1~/sd.[[:digit:]]/ && $2 == ""' |        # get any sd<number> with no mountpoint
-         tr -d '[:blank:]' |                            # remove any blank characters
-         sed 's/.$//' |                                 # remove the last character (e.g. sdb1 becomes sdb)
-         sort |                                         # sort
-         uniq                                           # remove duplicates
+drives=$(lsblk --noheadings --raw -o NAME,MOUNTPOINT |         # grab all disks/parts
+         awk '$1~/sd.[[:digit:]]/ && $2 == "" { print $1 }' |  # get any sd<number> with no mountpoint
+         tr -d '[:blank:]' |                                   # remove any blank characters
+         sed 's/.$//' |                                        # remove the last character (e.g. sdb1 becomes sdb)
+         sort |                                                # sort
+         uniq                                                  # remove duplicates
 )
 
 [ -z "$drives" ] && no_external_drives  # Exit if $drives is zero-length
 
-echo "Assuming $(echo "$drives" | wc -l) drive(s), is this correct?"
+echo "Found $(echo "$drives" | wc -l) drive(s):"
+echo
+
+for drive in $(echo "$drives" | paste -s -d ' ' -); do
+    echo "Getting size of /dev/$drive..."
+    echo "    $(lsblk --noheadings --raw -o NAME,SIZE /dev/"$drive" \
+                | head -n1 \
+                | awk '{ print $NF }')"
+    echo
+done
