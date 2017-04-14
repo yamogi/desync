@@ -50,7 +50,7 @@ if [ "$actual_mode" != "$expected_mode" ]; then keys_file_incorrect_mode ; fi
 #########
 # START #
 #########
-# Get list of drives that contain unmounted partitions
+# Get list of unmounted partitions
 drives=$(lsblk --noheadings --raw -o NAME,MOUNTPOINT |         # grab all disks/parts
          #awk '$1~/sd.[[:digit:]]/ { print $1 }' |             # get any sd<number>
          awk '$1~/sd.[[:digit:]]/ && $2 == "" { print $1 }' |  # get any sd<number> with no mountpoint
@@ -60,12 +60,17 @@ drives=$(lsblk --noheadings --raw -o NAME,MOUNTPOINT |         # grab all disks/
 
 [ -z "$drives" ] && no_external_drives  # Exit if $drives is zero-length
 
+# Inform the user about discovered unmounted partitions
 echo "Found $(echo "$drives" | wc -l) unmounted partitions:"
 for drive in $drives; do
     echo "  /dev/$drive"
 done
 echo
 
+# Get size of drives that contain unmounted partitions
+#  - Drives are collapsed when possible - e.g. when presented with sdb1 and sdb2,
+#    the script will simply check the overall size of /dev/sdb
+#  - This is subject to change in the future
 for drive in $(echo "$drives" | sed 's/.$//' | sort | uniq); do
     echo "  Getting size of /dev/$drive..."
     echo "    $(lsblk --noheadings --raw -o NAME,SIZE /dev/"$drive" \
@@ -74,6 +79,7 @@ for drive in $(echo "$drives" | sed 's/.$//' | sort | uniq); do
     echo
 done
 
+# Get user input to continue
 while true; do
     read -r -p "Do you wish to continue (y/n)? " choice
     case $choice in
