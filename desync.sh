@@ -15,7 +15,8 @@ function keys_file_no_exist () {
 }
 
 function keys_file_incorrect_mode () {
-    echo "Blah"
+    echo "$keys_file was found to have mode $actual_mode"
+    echo "Please run: (sudo) chmod $expected_mode $keys_file"
     exit 1
 }
 
@@ -33,7 +34,8 @@ keys_file="/usr/local/etc/keys"
 
 # Check keys file has correct mode (not working yet)
 expected_mode="600"
-#(( $(stat -c %a "$keys_file" == "$expected_mode") )) || keys_file_incorrect_mode
+actual_mode=$(stat -c %a "$keys_file")
+if [ "$actual_mode" != "$expected_mode" ]; then keys_file_incorrect_mode ; fi
 
 # Get list of drives that contain unmounted partitions
 drives=$(lsblk --noheadings --raw -o NAME,MOUNTPOINT |  # grab all disks/parts
