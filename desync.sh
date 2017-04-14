@@ -24,7 +24,7 @@ keys_file_incorrect_mode () {
 }
 
 no_external_drives () {
-    echo "I could not find any drives with unmounted partitions"
+    echo "No unmounted partitions found"
     exit 1
 }
 
