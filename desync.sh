@@ -48,13 +48,13 @@ drives=$(lsblk --noheadings --raw -o NAME,MOUNTPOINT |         # grab all disks/
 
 [ -z "$drives" ] && no_external_drives  # Exit if $drives is zero-length
 
-echo "Found $(echo "$drives" | wc -l) drive(s):"
+echo "Found $(echo "$drives" | wc -l) drive(s) with unmounted partitions:"
 echo
 
 for drive in $drives; do
-    echo "Getting size of /dev/$drive..."
+    echo "  Getting size of /dev/$drive..."
     echo "    $(lsblk --noheadings --raw -o NAME,SIZE /dev/"$drive" \
-                | head -n1 \
-                | awk '{ print $NF }')"
+                 | head -n1 \
+                 | awk '{ print $NF }')"
     echo
 done
