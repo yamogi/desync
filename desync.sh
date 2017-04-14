@@ -44,15 +44,21 @@ decrypt_drives () {
 ##########
 # Check running as root
 [ "$(id -u)" = 0 ] || not_root
+echo "Running as root..."
+echo
 
 # Check keys file exists
 keys_file="/usr/local/etc/keys"
+echo "Keys file: $keys_file"
 [ -f "$keys_file" ] || keys_file_no_exist
+echo "  Test 1 passed: Keys file exists..."
 
 # Check keys file has correct mode
 expected_mode="600"
 actual_mode=$(stat -c %a "$keys_file")
 [ "$actual_mode" = "$expected_mode" ] || keys_file_incorrect_mode
+echo "  Test 2 passed: Keys file has correct permissions ($expected_mode)..."
+echo
 
 #########
 # START #
