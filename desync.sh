@@ -25,6 +25,10 @@ no_external_drives () {
     exit 1
 }
 
+decrypt_drives () {
+    echo "Preparing to decrypt drives..."
+}
+
 # Check running as root
 [ "$(id -u)" = 0 ] || not_root
 
@@ -57,4 +61,13 @@ for drive in $drives; do
                  | head -n1 \
                  | awk '{ print $NF }')"
     echo
+done
+
+while true; do
+    read -p "Do you wish to continue (y/n)? " choice
+    case $choice in
+        [Yy]|yes ) echo "Yes picked" ; decrypt_drives ; break ;;
+        [Nn]|no ) echo "No picked" ; exit 1;;
+        * ) echo "Please answer Y/y/yes or N/n/no.";;
+    esac
 done
