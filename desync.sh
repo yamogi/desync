@@ -51,19 +51,19 @@ if [ "$actual_mode" != "$expected_mode" ]; then keys_file_incorrect_mode ; fi
 # START #
 #########
 # Get list of unmounted partitions
-drives=$(lsblk --noheadings --raw -o NAME,MOUNTPOINT |         # grab all disks/parts
-         #awk '$1~/sd.[[:digit:]]/ { print $1 }' |             # get any sd<number>
-         awk '$1~/sd.[[:digit:]]/ && $2 == "" { print $1 }' |  # get any sd<number> with no mountpoint
-         tr -d '[:blank:]' |                                   # remove any blank characters
-         sort                                                  # sort
+partitions=$(lsblk --noheadings --raw -o NAME,MOUNTPOINT |         # grab all disks/parts
+             #awk '$1~/sd.[[:digit:]]/ { print $1 }' |             # get any sd<number>
+             awk '$1~/sd.[[:digit:]]/ && $2 == "" { print $1 }' |  # get any sd<number> with no mountpoint
+             tr -d '[:blank:]' |                                   # remove any blank characters
+             sort                                                  # sort
 )
 
-[ -z "$drives" ] && no_external_drives  # Exit if $drives is zero-length
+[ -z "$partitions" ] && no_unmounted partitions  # Exit if $partitions is zero-length
 
 # Inform the user about discovered unmounted partitions
-echo "Found $(echo "$drives" | wc -l) unmounted partitions:"
-for drive in $drives; do
-    echo "  /dev/$drive"
+echo "Found $(echo "$partitions" | wc -l) unmounted partitions:"
+for partition in $partitions; do
+    echo "  /dev/$partition"
 done
 echo
 
@@ -71,13 +71,15 @@ echo
 #  - Drives are collapsed when possible - e.g. when presented with sdb1 and sdb2,
 #    the script will simply check the overall size of /dev/sdb
 #  - This is subject to change in the future
-for drive in $(echo "$drives" | sed 's/.$//' | sort | uniq); do
+for drive in $(echo "$partitions" | sed 's/.$//' | sort | uniq); do
     echo "  Getting size of /dev/$drive..."
     echo "    $(lsblk --noheadings --raw -o NAME,SIZE /dev/"$drive" \
                  | head -n1 \
                  | awk '{ print $NF }')"
     echo
 done
+
+echo "Will assume first partition of each drive"
 
 # Get user input to continue
 while true; do
