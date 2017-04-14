@@ -30,6 +30,13 @@ no_external_drives () {
 
 decrypt_drives () {
     echo "Preparing to decrypt drives..."
+    loop=1
+    for drive in $(echo "$partitions" | sed 's/.$//' | sort | uniq); do
+        echo "Attempting to decrypt /dev/${drive}1 with key found on line $loop of $keys_file"
+        passphrase=$(sed "${loop}p" "$keys_file")
+        echo "$passphrase" | cryptsetup luksOpen /dev/"$drive"1 drive"$loop"
+        loop=$((loop+1))
+    done
 }
 
 ##########
