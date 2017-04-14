@@ -64,7 +64,7 @@ for drive in $drives; do
 done
 
 while true; do
-    read -p "Do you wish to continue (y/n)? " choice
+    read -r -p "Do you wish to continue (y/n)? " choice
     case $choice in
         [Yy]|yes ) echo "Yes picked" ; decrypt_drives ; break ;;
         [Nn]|no ) echo "No picked" ; exit 1;;
