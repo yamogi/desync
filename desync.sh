@@ -52,7 +52,7 @@ keys_file="/usr/local/etc/keys"
 # Check keys file has correct mode
 expected_mode="600"
 actual_mode=$(stat -c %a "$keys_file")
-if [ "$actual_mode" != "$expected_mode" ]; then keys_file_incorrect_mode ; fi
+[ "$actual_mode" = "$expected_mode" ] || keys_file_incorrect_mode
 
 #########
 # START #
