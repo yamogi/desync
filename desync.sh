@@ -7,6 +7,7 @@
 # FUNCTIONS #
 #############
 not_root () {
+    printf %s\\n "-- ERROR --"
     printf %s\\n "Please run this script as root"
     exit 1
 }
@@ -23,14 +24,22 @@ usage () {
 }
 
 keys_file_no_exist () {
+    printf %s\\n "-- ERROR --"
     printf %s\\n "$keys_file not found"
     printf %s\\n "Please create $keys_file and populate it with keys"
     exit 1
 }
 
 keys_file_incorrect_mode () {
+    printf %s\\n "-- ERROR --"
     printf %s\\n "$keys_file was found to have mode $actual_mode"
     printf %s\\n "Please run: (sudo) chmod $expected_mode $keys_file"
+    exit 1
+}
+
+not_a_directory () {
+    printf %s\\n "-- ERROR --"
+    printf %s\\n "$OPTARG is not a valid directory"
     exit 1
 }
 
@@ -38,15 +47,34 @@ decrypt_drives () {
     printf %s\\n "Something will be here eventually..."
 }
 
-##########
-# CHECKS #
-##########
+######################
+# CHECKS AND OPTIONS #
+######################
 # Check running as root
 [ "$(id -u)" = 0 ] || not_root
 printf %s\\n "Running as root..."
 printf %s\\n
 
-#check_arguments
+directory=
+while getopts "d:h" opt; do
+    case $opt in
+        d)
+            [ -d "$OPTARG" ] || not_a_directory  # Exit if not a directory
+            directory=$OPTARG
+            printf %s\\n "$directory is a valid directory"
+            ;;
+        h)
+            usage
+            ;;
+    esac
+done
+
+[ -z "$directory" ] && exit 1  # Exit if nothing specified with -d
+
+shift $((OPTIND-1))
+
+
+#check_arguments  # Commented out for the time being, there's probably a better way to handle this
 
 # Check keys file exists
 keys_file="/usr/local/etc/keys"
@@ -60,32 +88,16 @@ expected_mode="600"
 actual_mode=$(stat -c %a "$keys_file")
 printf %s\\n "\\ Checking permissions of file"
 [ "$actual_mode" = "$expected_mode" ] || keys_file_incorrect_mode
-printf %s\\n "  \\  Keys file has correct permissions ($expected_mode)"
+printf %s\\n "  \\ Keys file has correct permissions ($expected_mode)"
 
+# Get length of keys file (will compare against number of partitions specified at a later point)
 printf %s\\n "\\ Getting length of file: $keys_file"
 length_of_keys_file=$(wc -l < "$keys_file")
 printf %s\\n "  \\ Keys file contains: $length_of_keys_file line(s)"
 
 echo  # Newline
 
-###########
-# OPTIONS #
-###########
-directory=
-
-while getopts "d:" opt; do
-    case $opt in
-        d)
-            [ -d "$OPTARG" ] || usage  # Exit if not a directory
-            directory=$OPTARG
-            printf %s\\n "$directory is a valid directory"
-            ;;
-    esac
-done
-
-[ -z "$directory" ] && usage
-
-shift $((OPTIND-1))
+# Stuff was here...
 
 partitions=$*
 printf %s\\n "Showing partitions..."
