@@ -13,7 +13,6 @@ not_root () {
 }
 
 check_arguments () {
-    printf $s\\n "Inside function: $#"
     [ "$#" = 0 ] && not_enough_arguments  # Show usage (and exit) if no further arguments
 }
 
@@ -35,6 +34,12 @@ not_a_directory () {
     printf %s\\n "-- ERROR --"
     printf %s\\n "$OPTARG is not a valid directory"
     exit 1
+}
+
+no_directory_specified () {
+    printf %s\\n "-- ERROR --"
+    printf %s\\n "-d was not specified, and is a required argument"
+    usage
 }
 
 keys_file_no_exist () {
@@ -63,7 +68,6 @@ decrypt_drives () {
 printf %s\\n "Running as root..."
 printf "\n"
 
-printf %s\\n "Outside function: $#"
 check_arguments "$@"  # Exit if zero arguments
 
 directory=
@@ -80,7 +84,7 @@ while getopts "d:h" opt; do
     esac
 done
 
-[ -z "$directory" ] && exit 1  # Exit if nothing specified with -d
+[ -z "$directory" ] && no_directory_specified  # Exit if nothing specified with -d
 
 shift $((OPTIND-1))  # Leave only partitions as remaining arguments
 
