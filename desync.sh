@@ -9,7 +9,7 @@
 not_root () {
     printf %s\\n "-- ERROR --"
     printf %s\\n "Please run this script as root"
-    exit 1
+    usage
 }
 
 check_arguments () {
@@ -33,7 +33,7 @@ usage () {
 not_a_directory () {
     printf %s\\n "-- ERROR --"
     printf %s\\n "$OPTARG is not a valid directory"
-    exit 1
+    usage
 }
 
 no_directory_specified () {
