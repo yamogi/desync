@@ -11,6 +11,11 @@ not_root () {
     exit 1
 }
 
+check_arguments () {
+    [ "$#" = 0 ] && usage  # Show usage (and exit) if no further arguments
+
+}
+
 usage () {
     printf %s\\n "Usage $(basename "$0") -d [directory] partition1 [partition2...]"
     printf %s\\n " - A valid directory must be specified"
@@ -31,7 +36,8 @@ keys_file_incorrect_mode () {
 }
 
 get_length_of_keys_file () {
-    echo "  Keys file contains: $(wc -l < "$keys_file") line(s)"
+    length_of_keys_file=$(wc -l < "$keys_file")
+    echo "  Keys file contains: $length_of_keys_file line(s)"
 }
 
 decrypt_drives () {
@@ -46,7 +52,7 @@ decrypt_drives () {
 echo "Running as root..."
 echo
 
-[ "$#" = 0 ] && usage  # Show usage if no arguments
+check_arguments
 
 # Check keys file exists
 keys_file="/usr/local/etc/keys"
