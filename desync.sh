@@ -79,9 +79,12 @@ continue_check () {
     while true; do
         read -r -p "Do you wish to continue (y/n)? " choice
         case $choice in
-            [Yy]|yes ) printf %s\\n "Yes picked" ; break;;
-            [Nn]|no ) printf %s\\n "No picked" ; exit 1;;
-            * ) printf %s\\n "Please answer Y/y/yes or N/n/no.";;
+            [Yy]|yes) printf "\n"; break
+                ;;
+            [Nn]|no) exit 1
+                ;;
+            *) printf %s\\n "Please answer Y/y/yes or N/n/no."
+                ;;
         esac
     done
 }
