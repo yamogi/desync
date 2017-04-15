@@ -64,7 +64,7 @@ printf %s\\n "Running as root..."
 printf "\n"
 
 printf %s\\n "Outside function: $#"
-check_arguments  # Exit if zero arguments
+check_arguments "$@"  # Exit if zero arguments
 
 directory=
 while getopts "d:h" opt; do
