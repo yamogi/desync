@@ -38,7 +38,7 @@ not_a_directory () {
 
 no_directory_specified () {
     printf %s\\n "-- ERROR --"
-    printf %s\\n "-d was not specified, and is a required argument"
+    printf %s\\n "-d was not specified, or was specified with a blank argument"
     usage
 }
 
@@ -71,7 +71,7 @@ printf "\n"
 check_arguments "$@"  # Exit if zero arguments
 
 directory=
-while getopts "d:h" opt; do
+while getopts ":d:h" opt; do
     case $opt in
         d)
             [ -d "$OPTARG" ] || not_a_directory  # Exit if not a directory
