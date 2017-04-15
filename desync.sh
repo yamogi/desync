@@ -9,7 +9,7 @@
 not_root () {
     printf %s\\n "-- ERROR --"
     printf %s\\n "Please run this script as root"
-    usage
+    exit 1
 }
 
 check_arguments () {
