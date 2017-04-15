@@ -74,6 +74,18 @@ keys_file_incorrect_group () {
     exit 1
 }
 
+continue_check () {
+    # Get user input to continue
+    while true; do
+        read -r -p "Do you wish to continue (y/n)? " choice
+        case $choice in
+            [Yy]|yes ) printf %s\\n "Yes picked" ; break;;
+            [Nn]|no ) printf %s\\n "No picked" ; exit 1;;
+            * ) printf %s\\n "Please answer Y/y/yes or N/n/no.";;
+        esac
+    done
+}
+
 decrypt_drives () {
     printf %s\\n "Something will be here eventually..."
 }
@@ -155,12 +167,4 @@ for partition in $partitions; do
     printf %s\\n "$partition"
 done
 
-# Get user input to continue
-while true; do
-    read -r -p "Do you wish to continue (y/n)? " choice
-    case $choice in
-        [Yy]|yes ) printf %s\\n "Yes picked" ; decrypt_drives ; break;;
-        [Nn]|no ) printf %s\\n "No picked" ; exit 1;;
-        * ) printf %s\\n "Please answer Y/y/yes or N/n/no.";;
-    esac
-done
+continue_check && decrypt_drives
