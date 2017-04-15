@@ -7,7 +7,7 @@
 # FUNCTIONS #
 #############
 not_root () {
-    echo "Not running as root, unable to continue"
+    echo "Please run this script as root"
     exit 1
 }
 
@@ -41,12 +41,12 @@ decrypt_drives () {
 ##########
 # CHECKS #
 ##########
-[ "$#" = 0 ] && usage  # Show usage if no arguments
-
 # Check running as root
 [ "$(id -u)" = 0 ] || not_root
 echo "Running as root..."
 echo
+
+[ "$#" = 0 ] && usage  # Show usage if no arguments
 
 # Check keys file exists
 keys_file="/usr/local/etc/keys"
