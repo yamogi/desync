@@ -13,13 +13,26 @@ not_root () {
 }
 
 check_arguments () {
-    [ "$#" = 0 ] && usage  # Show usage (and exit) if no further arguments
+    [ "$#" = 0 ] && not_enough_arguments  # Show usage (and exit) if no further arguments
+}
+
+not_enough_arguments () {
+    printf %s\\n "-- ERROR --"
+    printf %s\\n "Not enough arguments to continue!"
+    usage
 }
 
 usage () {
+    printf "\n"  # Newline
     printf %s\\n "Usage $(basename "$0") -d [directory] partition1 [partition2...]"
     printf %s\\n " - A valid directory must be specified"
     printf %s\\n " - At least one partition must be specified"
+    exit 1
+}
+
+not_a_directory () {
+    printf %s\\n "-- ERROR --"
+    printf %s\\n "$OPTARG is not a valid directory"
     exit 1
 }
 
@@ -37,12 +50,6 @@ keys_file_incorrect_mode () {
     exit 1
 }
 
-not_a_directory () {
-    printf %s\\n "-- ERROR --"
-    printf %s\\n "$OPTARG is not a valid directory"
-    exit 1
-}
-
 decrypt_drives () {
     printf %s\\n "Something will be here eventually..."
 }
@@ -53,7 +60,12 @@ decrypt_drives () {
 # Check running as root
 [ "$(id -u)" = 0 ] || not_root
 printf %s\\n "Running as root..."
-printf %s\\n
+printf "\n"
+
+printf %s\\n "(1) Number of args: $#"
+#check_arguments  # Exit if zero arguments
+
+echo "Got past..."
 
 directory=
 while getopts "d:h" opt; do
@@ -73,6 +85,7 @@ done
 
 shift $((OPTIND-1))  # Leave only partitions as remaining arguments
 
+echo "Number of arguments: $#"
 
 #check_arguments  # Commented out for the time being, there's probably a better way to handle this
 
