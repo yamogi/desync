@@ -77,6 +77,9 @@ while getopts ":d:h" opt; do
             [ -d "$OPTARG" ] || not_a_directory  # Exit if not a directory
             directory=$OPTARG
             printf %s\\n "$directory is a valid directory"
+            printf %s\\n "INFO: Getting size of $directory"
+            printf %s\\n "INFO: $directory is $(du -sh -- $directory 2>/dev/null | awk '{ print $1 }')"
+            printf "\n"
             ;;
         h)
             usage
