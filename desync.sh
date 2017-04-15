@@ -13,6 +13,7 @@ not_root () {
 }
 
 check_arguments () {
+    printf $s\\n "Inside function: $#"
     [ "$#" = 0 ] && not_enough_arguments  # Show usage (and exit) if no further arguments
 }
 
@@ -62,10 +63,8 @@ decrypt_drives () {
 printf %s\\n "Running as root..."
 printf "\n"
 
-printf %s\\n "(1) Number of args: $#"
-#check_arguments  # Exit if zero arguments
-
-echo "Got past..."
+printf %s\\n "Outside function: $#"
+check_arguments  # Exit if zero arguments
 
 directory=
 while getopts "d:h" opt; do
