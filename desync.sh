@@ -24,7 +24,7 @@ not_enough_arguments () {
 
 usage () {
     printf "\n"  # Newline
-    printf %s\\n "Usage $(basename "$0") -d [directory] partition1 [partition2...]"
+    printf %s\\n "Usage: $(basename "$0") -d [directory] partition1 [partition2...]"
     printf %s\\n " - A valid directory must be specified"
     printf %s\\n " - At least one partition must be specified"
     exit 1
