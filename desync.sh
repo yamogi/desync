@@ -25,8 +25,12 @@ not_enough_arguments () {
 usage () {
     printf "\n"  # Newline
     printf %s\\n "Usage: $(basename "$0") -d [directory] partition1 [partition2...]"
-    printf %s\\n " - A valid directory must be specified"
-    printf %s\\n " - At least one partition must be specified"
+    printf "\n"
+    printf %s\\n "Options"
+    printf %s\\n " -d            local directory to sync to external devices"
+    printf %s\\n "                - A valid directory must be specified"
+    printf %s\\n " partition1    partition to decrypt and mount (e.g. sdb1)"
+    printf %s\\n "                - At least one valid (unmounted) partition must be specified"
     exit 1
 }
 
