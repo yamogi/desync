@@ -88,8 +88,6 @@ done
 
 shift $((OPTIND-1))  # Leave only partitions as remaining arguments
 
-echo "Number of arguments: $#"
-
 #check_arguments  # Commented out for the time being, there's probably a better way to handle this
 
 # Check keys file exists
@@ -111,7 +109,7 @@ printf %s\\n "\\ Getting length of file: $keys_file"
 length_of_keys_file=$(wc -l < "$keys_file")
 printf %s\\n "  \\ Keys file contains: $length_of_keys_file line(s)"
 
-echo  # Newline
+printf "\n"  # Newline
 
 # Stuff was here...
 
