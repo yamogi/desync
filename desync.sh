@@ -71,7 +71,7 @@ done
 
 [ -z "$directory" ] && exit 1  # Exit if nothing specified with -d
 
-shift $((OPTIND-1))
+shift $((OPTIND-1))  # Leave only partitions as remaining arguments
 
 
 #check_arguments  # Commented out for the time being, there's probably a better way to handle this
