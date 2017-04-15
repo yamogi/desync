@@ -162,8 +162,6 @@ printf %s\\n "  \\ Keys file contains: $length_of_keys_file line(s)"
 
 printf "\n"  # Newline
 
-# Stuff was here...
-
 partitions=$*
 printf %s\\n "Showing partitions..."
 for partition in $partitions; do
