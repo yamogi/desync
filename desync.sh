@@ -60,6 +60,20 @@ keys_file_incorrect_mode () {
     exit 1
 }
 
+keys_file_incorrect_user () {
+    printf %s\\n "-- ERROR --"
+    printf %s\\n "$keys_file was found to have user $actual_user"
+    printf %s\\n "Please run: (sudo) chown $expected_user:$expected_user $keys_file"
+    exit 1
+}
+
+keys_file_incorrect_group () {
+    printf %s\\n "-- ERROR --"
+    printf %s\\n "$keys_file was found to have user $actual_group"
+    printf %s\\n "Please run: (sudo) chown $expected_group:$expected_group $keys_file"
+    exit 1
+}
+
 decrypt_drives () {
     printf %s\\n "Something will be here eventually..."
 }
@@ -111,6 +125,20 @@ actual_mode=$(stat -c %a "$keys_file")
 printf %s\\n "\\ Checking permissions of file"
 [ "$actual_mode" = "$expected_mode" ] || keys_file_incorrect_mode
 printf %s\\n "  \\ Keys file has correct permissions ($expected_mode)"
+
+# Check keys file has correct user
+expected_user="root"
+printf %s\\n "\\ Checking user of file"
+actual_user=$(stat -c %U "$keys_file")
+[ "$actual_user" = "$expected_user" ] || keys_file_incorrect_user
+printf %s\\n "  \\ Keys file has correct user ($expected_user)"
+
+# Check keys file has correct group
+expected_group="root"
+printf %s\\n "\\ Checking group of file"
+actual_group=$(stat -c %G "$keys_file")
+[ "$actual_group" = "$expected_group" ] || keys_file_incorrect_group
+printf %s\\n "  \\ Keys file has correct group ($expected_group)"
 
 # Get length of keys file (will compare against number of partitions specified at a later point)
 printf %s\\n "\\ Getting length of file: $keys_file"
