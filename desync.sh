@@ -168,4 +168,6 @@ for partition in $partitions; do
     printf %s\\n "$partition"
 done
 
+printf "\n"  # Newline
+
 continue_check && decrypt_drives
