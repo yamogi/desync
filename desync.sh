@@ -78,7 +78,8 @@ while getopts ":d:h" opt; do
             directory=$OPTARG
             printf %s\\n "$directory is a valid directory"
             printf %s\\n "INFO: Getting size of $directory"
-            printf %s\\n "INFO: $directory is $(du -sh -- $directory 2>/dev/null | awk '{ print $1 }')"
+            dir_size=$(du -sh -- "$directory" 2>/dev/null | awk '{ print $1 }')
+            printf %s\\n "INFO: $directory is $dir_size"
             printf "\n"
             ;;
         h)
