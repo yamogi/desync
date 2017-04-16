@@ -53,6 +53,12 @@ keys_file_no_exist () {
     exit 1
 }
 
+keys_file_check_property () {
+    printf %s\\n "\\ Checking $property of file"
+    [ "$actual_property" = "$expected_property" ] || keys_file_incorrect_property
+    printf %s\\n "  \\ Keys file has correct $property ($expected_property)"
+}
+
 keys_file_incorrect_property () {
     printf %s\\n "-- ERROR --"
     printf %s\\n "$keys_file was found to have $property $actual_property"
@@ -120,32 +126,26 @@ printf %s\\n "\\ Checking for existence of file"
 [ -f "$keys_file" ] || keys_file_no_exist
 printf %s\\n "  \\ Keys file exists"
 
-check_property () {
-    printf %s\\n "\\ Checking $property of file"
-    [ "$actual_property" = "$expected_property" ] || keys_file_incorrect_property
-    printf %s\\n "  \\ Keys file has correct $property ($expected_property)"
-}
-
 # Check keys file has correct mode
 property="mode"
 expected_property="600"
 actual_property=$(stat -c %a "$keys_file")
 fix_command="(sudo) chmod $expected_property $keys_file"
-check_property
+keys_file_check_property
 
 # Check keys file has correct user
 property="user"
 expected_property="root"
 actual_property=$(stat -c %U "$keys_file")
 fix_command="(sudo) chown $expected_property:$expected_property $keys_file"
-check_property
+keys_file_check_property
 
 # Check keys file has correct group
 property="group"
 expected_property="root"
 actual_property=$(stat -c %G "$keys_file")
 fix_command="(sudo) chown $expected_property:$expected_property $keys_file"
-check_property
+keys_file_check_property
 
 # Get length of keys file (will compare against number of partitions specified at a later point)
 printf %s\\n "\\ Getting length of file: $keys_file"
