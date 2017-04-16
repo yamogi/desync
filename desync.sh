@@ -117,7 +117,7 @@ done
 
 shift $((OPTIND-1))  # Leave only partitions as remaining arguments
 
-#check_arguments  # Commented out for the time being, there's probably a better way to handle this
+check_arguments "$@"
 
 # Check keys file exists
 keys_file="/usr/local/etc/keys"
